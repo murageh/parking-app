@@ -47,11 +47,16 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
   bool _loading = false;
   String amountToPay = '';
   String carReg = '';
+  bool isPaying = false;
 
   void updateLoading(isLoading) {
     setState(() {
       _loading = isLoading;
     });
+  }
+
+  void updateISPaying(paying) {
+    isPaying = paying;
   }
 
   handleBooking(User? user) async {
@@ -73,6 +78,7 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
   }
 
   handlePayment() async {
+    if (isPaying) return;
     User? user = widget.user;
     if (amountToPay == '' || int.parse(amountToPay).isNaN) {
       Fluttertoast.showToast(
@@ -91,12 +97,14 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
             toastLength: Toast.LENGTH_SHORT,
             backgroundColor: Colors.red);
       } else {
+        updateISPaying(true);
         pay(
                 userId: user.id,
                 amount: widget.amount,
                 updateLoading: updateLoading)
             .then((value) => {finish(key: "paid", value: value)})
-            .catchError((error) => print(error.toString()));
+            .catchError((error) => print(error.toString()))
+        .whenComplete(() => updateISPaying(false));
       }
     }
   }
