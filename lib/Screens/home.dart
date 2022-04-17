@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:parking_app/api.dart';
+import 'package:parking_app/components/item_card.dart';
 import 'package:parking_app/models/ParkingSpotModel.dart';
 import 'package:parking_app/models/PaymentModel.dart';
 import 'package:parking_app/models/UserModel.dart';
@@ -152,14 +154,20 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void showReceipt(Payment payment) {
+    final DateTime now = DateTime.now();
+    final DateFormat formatter = DateFormat('dd/MM/yyyy HH:mm:ss aa');
+    final String dateTime = formatter.format(now);
+
     showDialog(
         context: context,
         builder: (BuildContext buildContext) {
           return CustomDialogBox(
             title: "Payment Receipt",
             descriptions: "This is to acknowledge that ${user.name} of "
-                "car registration number ${user.parkingSpot?.currentVehicle}, paid "
-                "Kes. ${payment.amount}/= on ${payment.createdAt}.",
+                "car registration number ${payment.carRegNumber}, paid "
+                "Kes. ${payment.amount}/= on ${payment.createdAt}.\n\n"
+                "Parking Spot: ${payment.parkingSpotName} ID(${payment.parkingSpotId})\n"
+                "Date of generation: $dateTime",
             text: "OKAY",
             paymentReceipt: true,
             amount: payment.amount,
@@ -248,97 +256,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       return TabBarView(
                         children: [
                           parkingSpots.length > 0
-                              ? (GridView.builder(
-                                  gridDelegate:
-                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisSpacing: 1,
-                                    mainAxisSpacing: 2,
-                                    crossAxisCount: 2,
-                                  ),
-                                  itemCount: parkingSpots.length,
-                                  itemBuilder: (BuildContext ctx, index) {
-                                    return GestureDetector(
-                                      onTap: () => {
-                                        if (user.parkingSpot == null)
-                                          {bookSpot(parkingSpots[index])}
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Card(
-                                          child: Container(
-                                            alignment: Alignment.center,
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 8,
-                                                      horizontal: 12),
-                                              child: Column(
-                                                children: [
-                                                  CircleAvatar(
-                                                    backgroundColor:
-                                                        Colors.transparent,
-                                                    radius: 30,
-                                                    child: ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                                Radius.circular(
-                                                                    30)),
-                                                        child: Image.asset(
-                                                          "assets/images/parking.png",
-                                                          height: 60,
-                                                          width: 60,
-                                                        )),
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets
-                                                        .symmetric(vertical: 5),
-                                                    child: Text(
-                                                      parkingSpots[index].name,
-                                                      style: TextStyle(
-                                                        fontSize: 20,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets
-                                                        .symmetric(vertical: 5),
-                                                    child: Text(
-                                                      'Kes. ${parkingSpots[index].cost.toString()}/hr',
-                                                      style: TextStyle(
-                                                        fontSize: 18,
-                                                        fontWeight:
-                                                            FontWeight.normal,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets
-                                                        .symmetric(vertical: 5),
-                                                    child: Text(
-                                                      'Kes. ${(parkingSpots[index].lateFee * 5).toString()}/each 5 extra minutes.',
-                                                      style: TextStyle(
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.normal,
-                                                          color: Colors.orange),
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            decoration: BoxDecoration(
-                                                color: Color(0xfffffff),
-                                                borderRadius:
-                                                    BorderRadius.circular(5)),
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  }))
+                              ? SingleChildScrollView(
+                                  child: ItemCardLayoutGrid(
+                                      crossAxisCount: 2,
+                                      spots: parkingSpots,
+                                      bookSpot: bookSpot,
+                                      user: user),
+                                )
                               : Center(
                                   child: Text(
                                       "It seems like there are no unbooked parking spots at the moment.")),

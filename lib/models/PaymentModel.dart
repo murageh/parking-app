@@ -15,14 +15,18 @@ class PaymentModel {
 class Payment {
   final int id;
   final int amount;
-  final int userId; // In minutes
-  final int parkingSpotId; // Per every additional 1 minute
-  final String createdAt; // Per every additional 1 minute
+  final int userId;
+  final int parkingSpotId;
+  final String parkingSpotName;
+  final String carRegNumber;
+  final String createdAt;
 
   const Payment({
     required this.id,
     required this.amount,
     required this.parkingSpotId,
+    required this.parkingSpotName,
+    required this.carRegNumber,
     required this.userId,
     required this.createdAt,
   });
@@ -35,7 +39,9 @@ class Payment {
     return Payment(
       id: json['id'],
       amount: json['amountPaid'],
-      parkingSpotId: json['ParkingSpotId'],
+      parkingSpotId: json['ParkingSpotId'] ?? 0,
+      parkingSpotName: json['parkingSpotName'] ?? "NOT FOUND.",
+      carRegNumber: json['carRegNumber'],
       userId: json['UserId'],
       createdAt: dateTime,
     );
@@ -46,6 +52,8 @@ class Payment {
         'amountPaid': this.amount,
         'UserId': this.userId,
         'ParkingSpotId': this.parkingSpotId,
+        'parkingSpotName': this.parkingSpotName,
+        'carRegNumber': this.carRegNumber,
         'createdAt': this.createdAt,
       };
 

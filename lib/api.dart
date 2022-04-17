@@ -32,7 +32,8 @@ Future<User> login(
       }
       var user = obj["user"] ?? {};
       if (user != null && user != {}) {
-        // print(user);
+        // print("user => " + user.toString());
+        // print("trying " + User.fromJson(user).toString());
         return User.fromJson(user);
       } else
         throw Exception("No user found in the server.");
@@ -176,7 +177,7 @@ Future<bool> bookParkingSpot(
     }
   } catch (exception) {
     Fluttertoast.showToast(
-        msg: exception.toString(),
+        msg: "Booking " + exception.toString(),
         toastLength: Toast.LENGTH_LONG,
         backgroundColor: Colors.red);
     updateLoading(false);
@@ -205,7 +206,7 @@ Future<bool> pay({userId, amount, updateLoading}) async {
     }
   } catch (exception) {
     Fluttertoast.showToast(
-        msg: exception.toString(),
+        msg: "payment " + exception.toString(),
         toastLength: Toast.LENGTH_LONG,
         backgroundColor: Colors.red);
     updateLoading(false);
@@ -233,12 +234,12 @@ Future<int> getParkingBill({userId, updateLoading}) async {
     }
   } catch (exception) {
     Fluttertoast.showToast(
-        msg: exception.toString(),
+        msg: "Fetch bill " + exception.toString(),
         toastLength: Toast.LENGTH_LONG,
         backgroundColor: Colors.red);
     updateLoading(false);
     Future.error(exception);
-    return -1;
+    return 0;
   }
 }
 
@@ -263,7 +264,7 @@ Future<bool> requestCheckout({userId, updateLoading}) async {
     }
   } catch (exception) {
     Fluttertoast.showToast(
-        msg: exception.toString(),
+        msg: "Checkout " + exception.toString(),
         toastLength: Toast.LENGTH_LONG,
         backgroundColor: Colors.red);
     updateLoading(false);

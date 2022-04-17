@@ -34,6 +34,6 @@ Future<User> fetchCurrentUser({setUser, updateUser}) async {
   }
 
   if (updateUser != null) updateUser(user);
-  // print(user);
+  print(user);
   return user;
 }

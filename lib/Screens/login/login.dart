@@ -44,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
       updateLoading(true);
       login(email: _email, password: _password, updateLoading: updateLoading)
           .then((user) => {saveUser(user, context, redirect: true)})
-          .catchError((error) => setError("login" + error.toString()));
+          .catchError((error) => setError("login error " + error.toString()));
     } else {
       Fluttertoast.showToast(
           msg: "Enter your login details",

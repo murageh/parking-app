@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
@@ -100,11 +99,12 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
         updateISPaying(true);
         pay(
                 userId: user.id,
-                amount: widget.amount,
+                amount: widget.amount ?? "NULL",
                 updateLoading: updateLoading)
-            .then((value) => {finish(key: "paid", value: value)})
-            .catchError((error) => print(error.toString()))
-        .whenComplete(() => updateISPaying(false));
+            .then((value) => {})
+            .catchError(
+                (error) => print("payment callback " + error.toString()))
+            .whenComplete(() => updateISPaying(false));
       }
     }
   }
@@ -273,10 +273,6 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
   }
 
   acknowledgementBox(context) {
-    final DateTime now = DateTime.now();
-    final DateFormat formatter = DateFormat('dd/MM/yyyy HH:mm:ss aa');
-    final String dateTime = formatter.format(now);
-
     return Stack(
       children: <Widget>[
         Container(
@@ -337,15 +333,6 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
                       ),
                       Text(
                         widget.descriptions,
-                        style: TextStyle(fontSize: 14, height: 1.4),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "Parking Spot: ${widget.user?.parkingSpot?.name} ID(${widget.user?.parkingSpot?.id})\n"
-                        "Date of generation: $dateTime",
                         style: TextStyle(fontSize: 14, height: 1.4),
                         textAlign: TextAlign.center,
                       ),

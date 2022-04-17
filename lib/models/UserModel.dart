@@ -67,6 +67,6 @@ class User {
   @override
   String toString() {
     return "${this.name}, id(${this.id}) car(${this.parkingSpot != null ? this.parkingSpot?.currentVehicle : null}) email(${this.email}), "
-        "booked(${this.parkingSpot != null ? this.parkingSpot?.name : null}) made ${this.payments.length} payments";
+        "booked(${this.parkingSpot != null ? this.parkingSpot?.name : "none"}) made ${this.payments.length} payments";
   }
 }
